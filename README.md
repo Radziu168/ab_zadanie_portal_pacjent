@@ -158,7 +158,8 @@ W repozytorium znajduje się plik `.gitlab-ci.yml`, który:
 -   Uruchamia testy backendu
 -   Buduje aplikację frontendową
 -   Buduje obraz Docker
-
+  
+  ![CI Pipeline](https://gitlab.com/Radek168/ab_zadanie_portal_pacjent/badges/main/pipeline.svg)
 ---
 
 ## Token JWT
