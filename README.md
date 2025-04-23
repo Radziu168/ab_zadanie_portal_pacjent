@@ -26,13 +26,13 @@ docker-compose up --build
 2. Aplikacja uruchamia się pod:
 
 -   Frontend: [http://localhost:5173](http://localhost:5173)
--   Backend: [http://localhost:8000/](http://localhost:8000/)
+-   Backend: [http://localhost:8000/](http://localhost:8000)
 
 ---
 
 ## Dostęp do aplikacji
 
-Aby móc się zalogować, należy utwórzyć pacjenta w bazie.
+Aby móc się zalogować, należy utwórzyć pacjenta w bazie.  \
 _Uwaga: Jeśli aplikacja uruchamiana jest z zewnątrz kontenera (np. w terminalu VSCode), powienien używany być przedrostek `docker exec -it alab-backend...` z przykładu poniżej. Jeśli jest to lokalny terminal (np. w środowisku Herd) i Laravel ma dostęp do bazy, to wystarczy `php artisan...`._
 
 ### 1. Ręczne utworzenie pacjenta w Artisan Tinker
@@ -92,7 +92,9 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
 ### 1. Artisan Tinker
 
 -   **Tinker w kontenerze:**  
-    `docker exec -it alab-backend php artisan tinker`
+    ```bash
+    docker exec -it alab-backend php artisan tinker
+    ```
 -   **Lista pacjentów:**
     ```php
     \App\Models\Patient::all();
@@ -107,12 +109,16 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
     ]);
     ```
 
-### 2. Import CSV
+### 2. Import pacjentów z pliku CSV
 
 -   **Domyślny:**  
-    `docker exec -it alab-backend php artisan import:results`
+    ```bash
+    docker exec -it alab-backend php artisan import:results
+    ```
 -   **Inna ścieżka pliku:**  
-    `docker exec -it alab-backend php artisan import:results path=public/wyniki.csv`
+    ```bash
+    docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
+    ```
 
 ### 3. Podgląd danych
 
@@ -164,7 +170,7 @@ W repozytorium znajduje się plik `.gitlab-ci.yml`, który:
 
 ## Token JWT
 
-Po zalogowaniu frontend zapisuje token w `localStorage`:
+Po zalogowaniu token zapisuje się w `localStorage`:
 
 ```
 Authorization: Bearer <token>
