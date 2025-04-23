@@ -59,22 +59,20 @@ Przykładowy plik CSV znajduje się katalogu `/storage/app/`.
 
 Domyślne polecenie:
 
-    ```bash
-    docker exec -it alab-backend php artisan import:results
-    ```
-
+```bash
+docker exec -it alab-backend php artisan import:results
+```
 Import z innego pliku:
 
-    ```bash
-    docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
-    ```
+```bash
+docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
+```
 
 Struktura CSV:
 
-    ```csv
-    patientId;patientName;patientSurname;patientSex;patientBirthDate;orderId;testName;testValue;testReference
-    1;Piotr;Kowalski;m;1983-04-12;1;Glukoza;91;70-99
-    ```
+```csv
+patientId;patientName;patientSurname;patientSex;patientBirthDate;orderId;testName;testValue;testReference1;Piotr;Kowalski;m;1983-04-12;1;Glukoza;91;70-99
+```
 
 Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
 
@@ -132,9 +130,13 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
     \App\Models\Patient::truncate();
     ```
 -   **Rollback migracji:**  
-    `docker exec -it alab-backend php artisan migrate:reset`
+    ```bash
+    docker exec -it alab-backend php artisan migrate:reset
+    ```
 -   **Rollback i ponowny seed:**  
-    `docker exec -it alab-backend php artisan migrate:refresh --seed`
+    ```bash
+    docker exec -it alab-backend php artisan migrate:refresh --seed
+    ```
 
 ### 5. Restart kontenerów
 
@@ -143,9 +145,10 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
     docker-compose down -v --remove-orphans
     docker-compose up --build
     ```
--   **Restart backendu:**  
-    `docker-compose restart app`
-
+-   **Restart backendu:**
+    ```bash
+    docker-compose restart app
+    ```
 ---
 
 ## CI/CD (GitLab)
