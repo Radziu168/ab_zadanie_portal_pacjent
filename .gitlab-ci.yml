@@ -1,0 +1,62 @@
+stages:
+  - backend-test
+  - frontend-build
+  - docker
+
+# Testy backend
+backend_tests:
+  stage: backend-test
+  image: php:8.2
+  services:
+    - postgres:15
+  variables:
+    POSTGRES_DB: alab_test
+    POSTGRES_USER: alab
+    POSTGRES_PASSWORD: secret
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_DATABASE: alab_test
+    DB_USERNAME: alab
+    DB_PASSWORD: secret
+  before_script:
+    - apt-get update && apt-get install -y unzip git curl libpq-dev
+    - docker-php-ext-install pdo pdo_pgsql
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+    - cp .env.testing .env
+    - php artisan key:generate
+    - php artisan migrate --force
+  script:
+    - php artisan test
+
+# Test frontend
+frontend_build:
+  stage: frontend-build
+  image: node:20
+  rules:
+    - exists:
+        - frontend/package.json
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist
+    expire_in: 1 hour
+
+# Test Docker
+docker_build_and_push:
+  stage: docker
+  image: docker:20.10.24
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - main

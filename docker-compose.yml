@@ -1,0 +1,62 @@
+services:
+    app:
+        build:
+            context: .
+        container_name: alab-backend
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+        command: >
+            sh -c "
+              composer install &&
+              cp .env.example .env &&
+              sed -i 's/DB_HOST=.*/DB_HOST=db/' .env &&
+              sed -i 's/DB_DATABASE=.*/DB_DATABASE=alab/' .env &&
+              sed -i 's/DB_USERNAME=.*/DB_USERNAME=alab/' .env &&
+              sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=sekret/' .env &&
+              php artisan key:generate &&
+              php artisan migrate &&
+              php artisan jwt:secret &&
+              php artisan serve --host=0.0.0.0 --port=8000
+            "
+        environment:
+            DB_CONNECTION: pgsql
+            DB_HOST: db
+            DB_PORT: 5432
+            DB_DATABASE: alab
+            DB_USERNAME: alab
+            DB_PASSWORD: sekret
+
+    frontend:
+        build:
+            context: ./frontend
+        container_name: alab-frontend
+        working_dir: /app
+        volumes:
+            - ./frontend:/app
+        ports:
+            - "5173:5173"
+        command: >
+            sh -c "npm install && npm run dev -- --host"
+        environment:
+            - VITE_API_URL=http://localhost:8000
+
+    db:
+        image: postgres:15
+        container_name: alab-db
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: alab
+            POSTGRES_USER: alab
+            POSTGRES_PASSWORD: sekret
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+volumes:
+    pgdata:
