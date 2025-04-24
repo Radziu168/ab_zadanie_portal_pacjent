@@ -1,40 +1,49 @@
 <template>
-    <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100">
-        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-            <h1 class="text-2xl font-semibold text-center mb-6">🔐 Logowanie pacjenta</h1>
+    <v-app>
+        <v-main>
+            <v-container fluid class="d-flex align-center justify-center" style="height: 100vh">
+                <div style="width: 100%; max-width: 500px">
+                    <v-card elevation="2">
+                        <v-card-title class="justify-center"> 🔐 Logowanie pacjenta </v-card-title>
 
-            <form @submit.prevent="login">
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Login</label>
-                    <input
-                        v-model="loginInput"
-                        type="text"
-                        class="w-full border px-3 py-2 rounded"
-                        placeholder="ImięNazwisko"
-                    />
+                        <v-card-text>
+                            <v-form ref="form" v-model="valid" @submit.prevent="login">
+                                <v-text-field
+                                    v-model="loginInput"
+                                    :rules="loginRules"
+                                    label="Login (ImięNazwisko)"
+                                    required
+                                />
+                                <v-text-field
+                                    v-model="passwordInput"
+                                    :rules="passwordRules"
+                                    label="Hasło (RRRR-MM-DD)"
+                                    type="password"
+                                    required
+                                />
+                                <v-btn
+                                    :disabled="!valid || loading"
+                                    type="submit"
+                                    color="primary"
+                                    class="mt-4"
+                                    block
+                                >
+                                    Zaloguj się
+                                </v-btn>
+                            </v-form>
+                            <v-alert v-if="error" type="error" class="mt-4" dense text>
+                                {{ error }}
+                            </v-alert>
+                        </v-card-text>
+
+                        <v-card-actions class="justify-center">
+                            <v-progress-circular v-if="loading" indeterminate color="primary" />
+                        </v-card-actions>
+                    </v-card>
                 </div>
-
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Hasło (data urodzenia)</label>
-                    <input
-                        v-model="passwordInput"
-                        type="text"
-                        class="w-full border px-3 py-2 rounded"
-                        placeholder="1983-04-12"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                >
-                    Zaloguj się
-                </button>
-            </form>
-
-            <p v-if="error" class="text-red-500 mt-4 text-center">{{ error }}</p>
-        </div>
-    </div>
+            </v-container>
+        </v-main>
+    </v-app>
 </template>
 
 <script setup>
@@ -43,11 +52,28 @@ import { useRouter } from 'vue-router'
 
 const loginInput = ref('')
 const passwordInput = ref('')
-const error = ref(null)
+const error = ref('')
+const loading = ref(false)
+const valid = ref(false)
+const form = ref(null)
 const router = useRouter()
 
+const loginRules = [
+    (v) => !!v || 'Login jest wymagany',
+    (v) => !/\s/.test(v) || 'Nie używaj spacji',
+    (v) => /^\p{Lu}\p{Ll}+\p{Lu}\p{Ll}+$/u.test(v) || 'Login ma format: ImięNazwisko',
+]
+
+const passwordRules = [
+    (v) => !!v || 'Hasło jest wymagane',
+    (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) || 'Format hasła: RRRR-MM-DD',
+]
+
 const login = async () => {
-    error.value = null
+    if (form.value && !form.value.validate()) return
+
+    error.value = ''
+    loading.value = true
 
     try {
         const API_URL = import.meta.env.VITE_API_URL
@@ -69,8 +95,10 @@ const login = async () => {
         const data = await response.json()
         localStorage.setItem('token', data.token)
         router.push('/results')
-    } catch (e) {
+    } catch {
         error.value = 'Wystąpił błąd połączenia z API'
+    } finally {
+        loading.value = false
     }
 }
 </script>

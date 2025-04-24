@@ -1,53 +1,72 @@
 <template>
-    <div class="p-6 max-w-4xl mx-auto">
-        <button
-            @click="logout"
-            class="absolute top-6 right-6 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-        >
-            Wyloguj
-        </button>
-        <h1 class="text-2xl font-semibold mb-4">Dane pacjenta</h1>
+    <v-container class="pa-6" max-width="800">
+        <v-btn icon @click="logout" class="position-absolute" style="top: 16px; right: 16px">
+            <v-icon>logout</v-icon>
+        </v-btn>
+        <Loader v-if="loading" />
+        <div v-else>
+            <v-card class="mb-6">
+                <v-card-title>Dane pacjenta</v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" sm="6"> <strong>Imię:</strong> {{ patient.name }} </v-col>
+                        <v-col cols="12" sm="6">
+                            <strong>Nazwisko:</strong> {{ patient.surname }}
+                        </v-col>
+                        <v-col cols="12" sm="6"> <strong>Płeć:</strong> {{ patient.sex }} </v-col>
+                        <v-col cols="12" sm="6">
+                            <strong>Data urodzenia:</strong> {{ patient.birthDate }}
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
 
-        <div v-if="patient" class="mb-8 bg-white p-4 rounded shadow">
-            <p><strong>Imię:</strong> {{ patient.name }}</p>
-            <p><strong>Nazwisko:</strong> {{ patient.surname }}</p>
-            <p><strong>Płeć:</strong> {{ patient.sex }}</p>
-            <p><strong>Data urodzenia:</strong> {{ patient.birthDate }}</p>
-        </div>
-
-        <h2 class="text-xl font-semibold mb-2">Wyniki badań</h2>
-
-        <div v-if="orders.length" class="space-y-4">
-            <div v-for="order in orders" :key="order.orderId" class="bg-white p-4 rounded shadow">
-                <h3 class="font-bold text-gray-700 mb-2">Wyniki zlecenia #{{ order.orderId }}</h3>
-                <ul class="space-y-1">
-                    <li v-for="result in order.results" :key="result.name">
-                        <span class="font-medium">{{ result.name }}</span
-                        >:
-                        {{ result.value }}
-                        <span class="text-gray-500 text-sm">(norma: {{ result.reference }})</span>
-                    </li>
-                </ul>
+            <div v-if="orders.length">
+                <v-accordion>
+                    <v-accordion-item
+                        v-for="order in orders"
+                        :key="order.orderId"
+                        :title="`Wyniki zlecenia #${order.orderId}`"
+                    >
+                        <v-list>
+                            <v-list-item v-for="result in order.results" :key="result.name">
+                                <v-list-item-content>
+                                    <div>
+                                        <strong>{{ result.name }}:</strong> {{ result.value }}
+                                        <span class="text--secondary"
+                                            >(norma: {{ result.reference }})</span
+                                        >
+                                    </div>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </v-accordion-item>
+                </v-accordion>
             </div>
+            <v-alert v-else type="info"> Brak wyników do wyświetlenia. </v-alert>
         </div>
-
-        <p v-if="!orders.length" class="text-gray-600">Brak wyników do wyświetlenia.</p>
-    </div>
+    </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Loader from '@/components/Loader.vue'
 
+const router = useRouter()
 const patient = ref(null)
 const orders = ref([])
-const router = useRouter()
+const loading = ref(true)
+
+const logout = () => {
+    localStorage.removeItem('token')
+    router.push('/login')
+}
 
 onMounted(async () => {
     const token = localStorage.getItem('token')
-
     if (!token) {
-        router.push('/login')
+        logout()
         return
     }
 
@@ -65,17 +84,13 @@ onMounted(async () => {
             patient.value = data.patient
             orders.value = data.orders
         } else {
-            localStorage.removeItem('token')
-            router.push('/login')
+            logout()
         }
-    } catch (error) {
-        console.error('Błąd połączenia z API:', error)
-        localStorage.removeItem('token')
-        router.push('/login')
+    } catch (e) {
+        console.error('Błąd połączenia z API:', e)
+        logout()
+    } finally {
+        loading.value = false
     }
 })
-const logout = () => {
-    localStorage.removeItem('token')
-    router.push('/login')
-}
 </script>
