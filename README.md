@@ -33,7 +33,7 @@ docker-compose up --build
 ## Dostęp do aplikacji
 
 Aby móc się zalogować, należy utwórzyć pacjenta w bazie.  \
-_Uwaga: Jeśli aplikacja uruchamiana jest z zewnątrz kontenera (np. w terminalu VSCode), powienien używany być przedrostek `docker exec -it alab-backend...` z przykładu poniżej. Jeśli jest to lokalny terminal (np. w środowisku Herd) i Laravel ma dostęp do bazy, to wystarczy `php artisan...`._
+_Uwaga: Projekt w środowisku deweloperskim. Jeśli aplikacja uruchamiana jest z zewnątrz kontenera (np. w terminalu VSCode), powienien używany być przedrostek `docker exec -it alab-backend...` z przykładu poniżej. Jeśli jest to lokalny terminal (np. w środowisku Herd) i Laravel ma dostęp do bazy, to wystarczy `php artisan...`._
 
 ### 1. Ręczne utworzenie pacjenta w Artisan Tinker
 
