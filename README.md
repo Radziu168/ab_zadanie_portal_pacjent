@@ -89,27 +89,7 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
 
 ## Przydatne komendy
 
-### 1. Artisan Tinker
-
--   **Tinker w kontenerze:**  
-    ```bash
-    docker exec -it alab-backend php artisan tinker
-    ```
--   **Lista pacjentów:**
-    ```php
-    \App\Models\Patient::all();
-    ```
--   **Dodaj pacjenta ręcznie:**
-    ```php
-    \App\Models\Patient::create([
-        'name'       => 'Mariusz',
-        'surname'    => 'Kowalik',
-        'sex'        => 'm',
-        'birth_date' => '1995-05-15',
-    ]);
-    ```
-
-### 2. Import pacjentów z pliku CSV
+### 1. Import pacjentów z pliku CSV
 
 -   **Domyślny:**  
     ```bash
@@ -120,16 +100,31 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
     docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
     ```
 
-### 3. Podgląd danych
+### 2. Seeder
 
--   **Zlecenia i wyniki dla pacjenta nr 1:**
+-   **Sugeruje się użycie domyślnego seeder'a, który wygeneruje 10 pacjentów z różnymi wynikami.**  
+    ```bash
+    docker exec -it alab-backend php artisan db:seed
+    ```  
+
+### 3. Artisan Tinker
+
+-   **Tinker w kontenerze:**  
+    ```bash
+    docker exec -it alab-backend php artisan tinker
+    ```
+-   **Lista pacjentów:**
+    ```php
+    \App\Models\Patient::all();
+    ```
+-   **Wyniki dla pacjenta nr 1:**
     ```php
     \App\Models\Patient::find(1)->orders()->with('results')->get();
-    ```
+    ```    
 
 ### 4. Reset / rollback
 
--   **Usuń wszystkie rekordy:**
+-   **Usuń rekordy:**
     ```php
     \App\Models\Result::truncate();
     \App\Models\Order::truncate();
