@@ -8,7 +8,7 @@ Umożliwia logowanie pacjenta i wgląd w wyniki badań laboratoryjnych.
 ## Stack technologiczny
 
 -   **Backend:** Laravel 12 + PostgreSQL + JWT Auth
--   **Frontend:** Vue 3 + Vite
+-   **Frontend:** Vue 3 + Vuetify
 -   **CI/CD:** GitLab CI
 -   **Docker:** Compose (multi-container)
 -   **Import CSV:** obsługa i walidacja plików CSV
@@ -25,8 +25,8 @@ docker-compose up --build
 
 2. Aplikacja uruchamia się pod:
 
--   Frontend: [http://localhost:5173](http://localhost:5173)
--   Backend: [http://localhost:8000/](http://localhost:8000)
+-   Frontend: [http://localhost:5173](http://localhost:5173/)
+-   Backend: [http://localhost:8000](http://localhost:8000/)
 
 ---
 
