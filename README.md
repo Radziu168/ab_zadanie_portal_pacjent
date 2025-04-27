@@ -45,7 +45,7 @@ docker exec -it alab-backend php artisan tinker
 \App\Models\Patient::create([
     'name'       => 'Radek',
     'surname'    => 'Znazwiskiem',
-    'sex'        => 'm',
+    'sex'        => 'mężczyzna',
     'birth_date' => '1990-03-03',
 ]);
 ```
