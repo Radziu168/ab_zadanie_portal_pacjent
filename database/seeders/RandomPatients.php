@@ -23,10 +23,10 @@ class RandomPatients extends Seeder
         ];
 
         for ($i = 1; $i <= 10; $i++) {
-            $sex = $faker->randomElement(['m', 'f']);
+            $sex = $faker->randomElement(['mężczyzna', 'kobieta']);
 
             $patient = Patient::create([
-                'name' => $sex === 'f' ? $faker->firstNameFemale : $faker->firstNameMale,
+                'name' => $sex === 'kobieta' ? $faker->firstNameFemale : $faker->firstNameMale,
                 'surname' => $faker->lastName,
                 'sex' => $sex,
                 'birth_date' => $faker->date('Y-m-d', '-18 years'),

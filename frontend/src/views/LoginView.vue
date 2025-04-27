@@ -4,7 +4,9 @@
             <v-container fluid class="d-flex align-center justify-center" style="height: 100vh">
                 <div style="width: 100%; max-width: 500px">
                     <v-card elevation="2">
-                        <v-card-title class="justify-center"> 🔐 Logowanie pacjenta </v-card-title>
+                        <v-card-title class="justify-center text-center">
+                            Logowanie Pacjenta
+                        </v-card-title>
 
                         <v-card-text>
                             <v-form ref="form" v-model="valid" @submit.prevent="login">
@@ -13,14 +15,24 @@
                                     :rules="loginRules"
                                     label="Login (ImięNazwisko)"
                                     required
+                                    class="mb-4"
                                 />
                                 <v-text-field
                                     v-model="passwordInput"
                                     :rules="passwordRules"
+                                    :type="showPassword ? 'text' : 'password'"
                                     label="Hasło (RRRR-MM-DD)"
-                                    type="password"
                                     required
-                                />
+                                >
+                                    <template #append-inner>
+                                        <v-icon
+                                            :icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                                            class="mr-2"
+                                            @click="togglePasswordVisibility"
+                                            style="cursor: pointer"
+                                        />
+                                    </template>
+                                </v-text-field>
                                 <v-btn
                                     :disabled="!valid || loading"
                                     type="submit"
@@ -57,6 +69,7 @@ const loading = ref(false)
 const valid = ref(false)
 const form = ref(null)
 const router = useRouter()
+const showPassword = ref(false)
 
 const loginRules = [
     (v) => !!v || 'Login jest wymagany',
@@ -100,5 +113,8 @@ const login = async () => {
     } finally {
         loading.value = false
     }
+}
+const togglePasswordVisibility = () => {
+    showPassword.value = !showPassword.value
 }
 </script>

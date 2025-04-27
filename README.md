@@ -8,7 +8,7 @@ Umożliwia logowanie pacjenta i wgląd w wyniki badań laboratoryjnych.
 ## Stack technologiczny
 
 -   **Backend:** Laravel 12 + PostgreSQL + jwt-auth
--   **Frontend:** Vue 3 + Vuetify
+-   **Frontend:** Vue 3 + Vuetify 3
 -   **CI/CD:** GitLab CI
 -   **Docker:** Compose (multi-container)
 -   **Import CSV:** obsługa i walidacja plików CSV
@@ -32,7 +32,7 @@ docker-compose up --build
 
 ## Dostęp do aplikacji
 
-Aby móc się zalogować, należy utwórzyć pacjenta w bazie.  \
+Aby móc się zalogować, należy utwórzyć pacjenta w bazie. \
 _Uwaga: Projekt w środowisku deweloperskim. Jeśli aplikacja uruchamiana jest z zewnątrz kontenera (np. w terminalu VSCode), powienien używany być przedrostek `docker exec -it alab-backend...` z przykładu poniżej. Jeśli jest to lokalny terminal (np. w środowisku Herd) i Laravel ma dostęp do bazy, to wystarczy `php artisan...`._
 
 ### 1. Ręczne utworzenie pacjenta w Artisan Tinker
@@ -62,6 +62,7 @@ Domyślne polecenie:
 ```bash
 docker exec -it alab-backend php artisan import:results
 ```
+
 Import z innego pliku:
 
 ```bash
@@ -91,25 +92,25 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
 
 ### 1. Import pacjentów z pliku CSV
 
--   **Domyślny:**  
+-   **Domyślny:**
     ```bash
     docker exec -it alab-backend php artisan import:results
     ```
--   **Inna ścieżka pliku:**  
+-   **Inna ścieżka pliku:**
     ```bash
     docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
     ```
 
 ### 2. Seeder
 
--   **Sugeruje się użycie domyślnego seeder'a, który wygeneruje 10 pacjentów z różnymi wynikami:**  
+-   **Sugeruje się użycie domyślnego seeder'a, który wygeneruje 10 pacjentów z różnymi wynikami:**
     ```bash
     docker exec -it alab-backend php artisan db:seed
-    ```  
+    ```
 
 ### 3. Artisan Tinker
 
--   **Tinker w kontenerze:**  
+-   **Tinker w kontenerze:**
     ```bash
     docker exec -it alab-backend php artisan tinker
     ```
@@ -120,7 +121,7 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
 -   **Wyniki dla pacjenta nr 1:**
     ```php
     \App\Models\Patient::find(1)->orders()->with('results')->get();
-    ```    
+    ```
 
 ### 4. Reset / rollback
 
@@ -130,11 +131,11 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
     \App\Models\Order::truncate();
     \App\Models\Patient::truncate();
     ```
--   **Rollback migracji:**  
+-   **Rollback migracji:**
     ```bash
     docker exec -it alab-backend php artisan migrate:reset
     ```
--   **Rollback i ponowny seed:**  
+-   **Rollback i ponowny seed:**
     ```bash
     docker exec -it alab-backend php artisan migrate:refresh --seed
     ```
@@ -150,6 +151,7 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
     ```bash
     docker-compose restart app
     ```
+
 ---
 
 ## CI/CD (GitLab)
@@ -159,17 +161,12 @@ W repozytorium znajduje się plik `.gitlab-ci.yml`, który:
 -   Uruchamia testy backendu
 -   Buduje aplikację frontendową
 -   Buduje obraz Docker
-  
-  ![CI Pipeline](https://gitlab.com/Radek168/ab_zadanie_portal_pacjent/badges/main/pipeline.svg)
----
+
+## ![CI Pipeline](https://gitlab.com/Radek168/ab_zadanie_portal_pacjent/badges/main/pipeline.svg)
 
 ## Token JWT
 
-Po zalogowaniu token zapisuje się w `localStorage`:
-
-```
-Authorization: Bearer <token>
-```
+Po zalogowaniu token zapisuje się w `localStorage`.
 
 Czas życia tokenu: `60 minut`  
 (Można zmienić w `.env`: `JWT_TTL=60`)

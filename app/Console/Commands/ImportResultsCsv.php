@@ -49,8 +49,8 @@ class ImportResultsCsv extends Command
                     
                     $sex = strtolower(trim($record['patientSex']));
                     $sex = match ($sex) {
-                        'male' => 'm',
-                        'female' => 'f',
+                        'male' => 'mężczyzna',
+                        'female' => 'kobieta',
                         default => null,
                     };
                     if (!$sex) {
@@ -114,10 +114,20 @@ class ImportResultsCsv extends Command
                         }
                     }
                     // Zlecenia
-                    $order = Order::firstOrCreate([
-                        'id' => $record['orderId'],
-                        'patient_id' => $patient->id,
-                    ]);
+                    $order = Order::find($record['orderId']);
+
+                    if (!$order) {
+                        $order = Order::create([
+                            'id' => $record['orderId'],
+                            'patient_id' => $patient->id,
+                        ]);
+                    } else {
+                        if ($order->patient_id !== $patient->id) {
+                            $order->update([
+                                'patient_id' => $patient->id,
+                            ]);
+                        }
+                    }
                     // Wyniki
                     Result::create([
                         'order_id' => $order->id,
