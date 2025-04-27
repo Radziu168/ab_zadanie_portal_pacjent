@@ -7,7 +7,7 @@ Umożliwia logowanie pacjenta i wgląd w wyniki badań laboratoryjnych.
 
 ## Stack technologiczny
 
--   **Backend:** Laravel 12 + PostgreSQL + JWT Auth
+-   **Backend:** Laravel 12 + PostgreSQL + jwt-auth
 -   **Frontend:** Vue 3 + Vuetify
 -   **CI/CD:** GitLab CI
 -   **Docker:** Compose (multi-container)
@@ -74,7 +74,7 @@ Struktura CSV:
 patientId;patientName;patientSurname;patientSex;patientBirthDate;orderId;testName;testValue;testReference1;Piotr;Kowalski;m;1983-04-12;1;Glukoza;91;70-99
 ```
 
-Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
+Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
 
 ---
 
@@ -102,7 +102,7 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/laravel.log`.
 
 ### 2. Seeder
 
--   **Sugeruje się użycie domyślnego seeder'a, który wygeneruje 10 pacjentów z różnymi wynikami.**  
+-   **Sugeruje się użycie domyślnego seeder'a, który wygeneruje 10 pacjentów z różnymi wynikami:**  
     ```bash
     docker exec -it alab-backend php artisan db:seed
     ```  
