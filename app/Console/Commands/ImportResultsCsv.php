@@ -18,7 +18,7 @@ class ImportResultsCsv extends Command
 
     public function handle()
     {
-        $path = $this->argument('path');
+        $path = base_path($this->argument('path'));
     
         $logFile = storage_path('logs/import.log');
         file_put_contents($logFile, "=== START IMPORTU ===\n", FILE_APPEND);

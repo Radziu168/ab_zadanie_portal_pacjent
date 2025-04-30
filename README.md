@@ -58,10 +58,10 @@ Domyślne polecenie:
 docker exec -it alab-backend php artisan import:results
 ```
 
-Import z innego pliku:
+Import z innego pliku (wrzuconego do ./storage/app/):
 
 ```bash
-docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
+docker exec -it alab-backend php artisan import:results storage/app/nazwa_pliku.csv
 ```
 
 Struktura CSV:
@@ -91,9 +91,9 @@ Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
     ```bash
     docker exec -it alab-backend php artisan import:results
     ```
--   **Inna ścieżka pliku:**
+-   **Inny plik:**
     ```bash
-    docker exec -it alab-backend php artisan import:results path=public/wyniki.csv
+    docker exec -it alab-backend php artisan import:results storage/app/nazwa_pliku.csv
     ```
 
 ### 2. Seeder
