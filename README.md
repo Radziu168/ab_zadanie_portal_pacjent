@@ -58,7 +58,7 @@ Domyślne polecenie:
 docker exec -it alab-backend php artisan import:results
 ```
 
-Import z innego pliku (wrzuconego do ./storage/app/):
+Import z innego pliku (wrzuconego do `/storage/app/`):
 
 ```bash
 docker exec -it alab-backend php artisan import:results storage/app/nazwa_pliku.csv
