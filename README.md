@@ -67,7 +67,8 @@ docker exec -it alab-backend php artisan import:results storage/app/nazwa_pliku.
 Struktura CSV:
 
 ```csv
-patientId;patientName;patientSurname;patientSex;patientBirthDate;orderId;testName;testValue;testReference1;Piotr;Kowalski;m;1983-04-12;1;Glukoza;91;70-99
+patientId;patientName;patientSurname;patientSex;patientBirthDate;orderId;testName;testValue;testReference
+1;Piotr;Kowalski;m;1983-04-12;1;Glukoza;91;70-99
 ```
 
 Niepoprawne wiersze są pomijane i logowane w `storage/logs/import.log`.
